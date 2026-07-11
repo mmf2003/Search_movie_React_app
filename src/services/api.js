@@ -28,3 +28,21 @@ export async function searchMovies(query) {
 
     return data.Search;
 }
+
+export async function getMovieDetails(imdbID) {
+    const response = await fetch(
+        `${BASE_URL}?apikey=${API_KEY}&i=${encodeURIComponent(imdbID)}&plot=full`,
+    );
+
+    if (!response.ok) {
+        throw new Error("Не удалось получить информацию о фильме");
+    }
+
+    const data = await response.json();
+
+    if (data.Response === "False") {
+        throw new Error(data.Error || "Информация о фильме не найдена");
+    }
+
+    return data;
+}

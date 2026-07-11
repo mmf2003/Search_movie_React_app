@@ -1,13 +1,23 @@
 import { useState } from "react";
 import "./MovieCard.css";
 
-function MovieCard({ movie }) {
+function MovieCard({ movie, onSelect }) {
     const [posterError, setPosterError] = useState(false);
 
     const hasPoster = movie.Poster !== "N/A" && !posterError;
 
     return (
-        <article className="movie-card">
+        <article
+            className="movie-card"
+            role="button"
+            tabIndex={0}
+            onClick={() => onSelect(movie.imdbID)}
+            onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                    onSelect(movie.imdbID);
+                }
+            }}
+        >
             {hasPoster ? (
                 <img
                     className="movie-card__poster"

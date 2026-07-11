@@ -2,14 +2,20 @@ import { useEffect, useState } from "react";
 import SearchBar from "./components/SearchBar/SearchBar";
 import Loader from "./components/Loader/Loader";
 import MovieList from "./components/MovieList/MovieList";
-import { searchMovies } from "./services/api";
 import "./App.css";
+
+import { getMovieDetails, searchMovies } from "./services/api";
+import MovieModal from "./components/MovieModal/MovieModal";
 
 function App() {
     const [query, setQuery] = useState("");
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const [selectedMovie, setSelectedMovie] = useState(null);
+    const [isDetailsLoading, setIsDetailsLoading] = useState(false);
+    const [detailsError, setDetailsError] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleQueryChange = (newQuery) => {
         setQuery(newQuery);
@@ -19,6 +25,29 @@ function App() {
             setError("");
             setIsLoading(false);
         }
+    };
+
+    const handleMovieSelect = async (imdbID) => {
+        try {
+            setIsModalOpen(true);
+            setIsDetailsLoading(true);
+            setDetailsError("");
+            setSelectedMovie(null);
+
+            const movieDetails = await getMovieDetails(imdbID);
+
+            setSelectedMovie(movieDetails);
+        } catch (error) {
+            setDetailsError(error.message);
+        } finally {
+            setIsDetailsLoading(false);
+        }
+    };
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        setSelectedMovie(null);
+        setDetailsError("");
     };
 
     useEffect(() => {
@@ -87,9 +116,22 @@ function App() {
                     )}
 
                 {!isLoading && !error && movies.length > 0 && (
-                    <MovieList movies={movies} />
+                    <MovieList
+                        movies={movies}
+                        onMovieSelect={handleMovieSelect}
+                    />
                 )}
             </section>
+
+            {isModalOpen && (
+                <MovieModal
+                    key={selectedMovie?.imdbID || "movie-modal"}
+                    movie={selectedMovie}
+                    isLoading={isDetailsLoading}
+                    error={detailsError}
+                    onClose={handleModalClose}
+                />
+            )}
         </main>
     );
 }
