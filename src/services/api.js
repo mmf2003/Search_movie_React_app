@@ -1,7 +1,7 @@
 const API_KEY = "52d31e9";
 const BASE_URL = "https://www.omdbapi.com/";
 
-export async function searchMovies(query) {
+export async function searchMovies(query, signal) {
     const trimmedQuery = query.trim();
 
     if (!trimmedQuery) {
@@ -10,6 +10,7 @@ export async function searchMovies(query) {
 
     const response = await fetch(
         `${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(trimmedQuery)}`,
+        { signal },
     );
 
     if (!response.ok) {

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import SearchBar from "./components/SearchBar/SearchBar";
 import Loader from "./components/Loader/Loader";
 import MovieList from "./components/MovieList/MovieList";
+import useDebounce from "./hooks/useDebounce";
 import "./App.css";
 
 import { getMovieDetails, searchMovies } from "./services/api";
@@ -17,6 +18,8 @@ function App() {
     const [detailsError, setDetailsError] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const debouncedQuery = useDebounce(query, 500);
+
     const handleQueryChange = (newQuery) => {
         setQuery(newQuery);
 
@@ -24,7 +27,11 @@ function App() {
             setMovies([]);
             setError("");
             setIsLoading(false);
+            return;
         }
+
+        setIsLoading(true);
+        setError("");
     };
 
     const handleMovieSelect = async (imdbID) => {
