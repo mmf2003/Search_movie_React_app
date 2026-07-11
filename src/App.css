@@ -98,3 +98,51 @@
         grid-template-columns: 1fr;
     }
 }
+
+.favorites {
+    width: 100%;
+    max-width: 1200px;
+    margin: 64px auto 0;
+}
+
+.favorites__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+
+    margin-bottom: 24px;
+}
+
+.favorites__label {
+    margin: 0 0 6px;
+    color: #a78bfa;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.favorites__title {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(28px, 5vw, 42px);
+}
+
+.favorites__count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 44px;
+    height: 44px;
+    padding: 0 12px;
+
+    border: 1px solid rgba(167, 139, 250, 0.35);
+    border-radius: 999px;
+
+    background-color: rgba(139, 92, 246, 0.12);
+    color: #c4b5fd;
+
+    font-weight: 800;
+}

@@ -2,7 +2,14 @@ import { useEffect, useState } from "react";
 import "./MovieModal.css";
 import Loader from "../Loader/Loader";
 
-function MovieModal({ movie, isLoading, error, onClose }) {
+function MovieModal({
+    movie,
+    isLoading,
+    error,
+    isFavorite,
+    onToggleFavorite,
+    onClose,
+}) {
     const [posterError, setPosterError] = useState(false);
 
     useEffect(() => {
@@ -76,6 +83,18 @@ function MovieModal({ movie, isLoading, error, onClose }) {
                                 {movie.Title}
                             </h2>
 
+                            <button
+                                className={`movie-modal__favorite ${
+                                    isFavorite
+                                        ? "movie-modal__favorite--active"
+                                        : ""
+                                }`}
+                                type="button"
+                                onClick={() => onToggleFavorite(movie)}
+                                aria-pressed={isFavorite}
+                            >
+                                {isFavorite ? "♥ В избранном" : "♡ В избранное"}
+                            </button>
                             <p className="movie-modal__meta">
                                 {movie.Year} · {movie.Runtime} · {movie.Rated}
                             </p>

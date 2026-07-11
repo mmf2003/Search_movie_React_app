@@ -4,6 +4,7 @@ import Loader from "./components/Loader/Loader";
 import MovieList from "./components/MovieList/MovieList";
 import useDebounce from "./hooks/useDebounce";
 import SkeletonList from "./components/SkeletonList/SkeletonList";
+import useLocalStorage from "./hooks/useLocalStorage";
 import "./App.css";
 
 import { getMovieDetails, searchMovies } from "./services/api";
@@ -20,6 +21,7 @@ function App() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const debouncedQuery = useDebounce(query, 500);
+    const [favorites, setFavorites] = useLocalStorage("movie-favorites", []);
 
     const handleQueryChange = (newQuery) => {
         setQuery(newQuery);
@@ -56,6 +58,26 @@ function App() {
         setIsModalOpen(false);
         setSelectedMovie(null);
         setDetailsError("");
+    };
+
+    const isFavorite = (imdbID) => {
+        return favorites.some((favorite) => favorite.imdbID === imdbID);
+    };
+
+    const toggleFavorite = (movie) => {
+        setFavorites((currentFavorites) => {
+            const movieIsFavorite = currentFavorites.some(
+                (favorite) => favorite.imdbID === movie.imdbID,
+            );
+
+            if (movieIsFavorite) {
+                return currentFavorites.filter(
+                    (favorite) => favorite.imdbID !== movie.imdbID,
+                );
+            }
+
+            return [...currentFavorites, movie];
+        });
     };
 
     useEffect(() => {
@@ -116,6 +138,29 @@ function App() {
                 <SearchBar query={query} onQueryChange={handleQueryChange} />
             </section>
 
+            {favorites.length > 0 && (
+                <section className="favorites">
+                    <div className="favorites__header">
+                        <div>
+                            <p className="favorites__label">Ваша коллекция</p>
+
+                            <h2 className="favorites__title">Избранное</h2>
+                        </div>
+
+                        <span className="favorites__count">
+                            {favorites.length}
+                        </span>
+                    </div>
+
+                    <MovieList
+                        movies={favorites}
+                        onMovieSelect={handleMovieSelect}
+                        favorites={favorites}
+                        onToggleFavorite={toggleFavorite}
+                    />
+                </section>
+            )}
+
             <section className="results">
                 {query.trim().length > 0 && query.trim().length < 3 && (
                     <p className="results__message">
@@ -142,16 +187,8 @@ function App() {
                     <MovieList
                         movies={movies}
                         onMovieSelect={handleMovieSelect}
-                    />
-                )}
-
-                {isModalOpen && (
-                    <MovieModal
-                        key={selectedMovie?.imdbID || "movie-modal"}
-                        movie={selectedMovie}
-                        isLoading={isDetailsLoading}
-                        error={detailsError}
-                        onClose={handleModalClose}
+                        favorites={favorites}
+                        onToggleFavorite={toggleFavorite}
                     />
                 )}
             </section>
@@ -162,6 +199,10 @@ function App() {
                     movie={selectedMovie}
                     isLoading={isDetailsLoading}
                     error={detailsError}
+                    isFavorite={
+                        selectedMovie ? isFavorite(selectedMovie.imdbID) : false
+                    }
+                    onToggleFavorite={toggleFavorite}
                     onClose={handleModalClose}
                 />
             )}
