@@ -1,0 +1,125 @@
+.favorites {
+    width: 100%;
+    max-width: 1200px;
+    margin: 56px auto 0;
+}
+
+.favorites__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+
+    margin-bottom: 20px;
+}
+
+.favorites__label {
+    margin: 0 0 6px;
+    color: #a78bfa;
+
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.favorites__title {
+    margin: 0;
+    color: #ffffff;
+
+    font-size: clamp(24px, 4vw, 34px);
+    line-height: 1.1;
+}
+
+.favorites__meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.favorites__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+
+    border: 1px solid rgba(167, 139, 250, 0.35);
+    border-radius: 999px;
+
+    background-color: rgba(139, 92, 246, 0.12);
+    color: #c4b5fd;
+
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.favorites__see-all {
+    padding: 0;
+    border: 0;
+
+    background: transparent;
+    color: rgba(255, 255, 255, 0.68);
+
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.favorites__see-all:hover {
+    color: #ffffff;
+    transform: translateX(3px);
+}
+
+.favorites__track {
+    display: flex;
+    gap: 18px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding: 4px 2px 14px;
+
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(167, 139, 250, 0.45) rgba(255, 255, 255, 0.05);
+}
+
+.favorites__track::-webkit-scrollbar {
+    height: 7px;
+}
+
+.favorites__track::-webkit-scrollbar-track {
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.favorites__track::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background-color: rgba(167, 139, 250, 0.45);
+}
+
+@media (max-width: 600px) {
+    .favorites {
+        margin-top: 42px;
+    }
+
+    .favorites__header {
+        align-items: center;
+    }
+
+    .favorites__see-all {
+        display: none;
+    }
+
+    .favorite-card {
+        flex-basis: 130px;
+    }
+}

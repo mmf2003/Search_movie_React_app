@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import SearchBar from "./components/SearchBar/SearchBar";
-import Loader from "./components/Loader/Loader";
 import MovieList from "./components/MovieList/MovieList";
 import useDebounce from "./hooks/useDebounce";
 import SkeletonList from "./components/SkeletonList/SkeletonList";
 import useLocalStorage from "./hooks/useLocalStorage";
+import Favorites from "./components/Favorites/Favorites";
 import "./App.css";
 
 import { getMovieDetails, searchMovies } from "./services/api";
@@ -139,26 +139,11 @@ function App() {
             </section>
 
             {favorites.length > 0 && (
-                <section className="favorites">
-                    <div className="favorites__header">
-                        <div>
-                            <p className="favorites__label">Ваша коллекция</p>
-
-                            <h2 className="favorites__title">Избранное</h2>
-                        </div>
-
-                        <span className="favorites__count">
-                            {favorites.length}
-                        </span>
-                    </div>
-
-                    <MovieList
-                        movies={favorites}
-                        onMovieSelect={handleMovieSelect}
-                        favorites={favorites}
-                        onToggleFavorite={toggleFavorite}
-                    />
-                </section>
+                <Favorites
+                    favorites={favorites}
+                    onMovieSelect={handleMovieSelect}
+                    onToggleFavorite={toggleFavorite}
+                />
             )}
 
             <section className="results">
