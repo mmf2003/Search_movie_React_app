@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import SearchBar from "./components/SearchBar/SearchBar";
-import MovieCard from "./components/MovieCard/MovieCard";
+import Loader from "./components/Loader/Loader";
+import MovieList from "./components/MovieList/MovieList";
 import { searchMovies } from "./services/api";
 import "./App.css";
 
@@ -70,7 +71,7 @@ function App() {
                     </p>
                 )}
 
-                {isLoading && <p className="results__message">Загрузка...</p>}
+                {isLoading && <Loader />}
 
                 {error && (
                     <p className="results__message results__message--error">
@@ -85,11 +86,9 @@ function App() {
                         <p className="results__message">Фильмы не найдены</p>
                     )}
 
-                <div className="movies">
-                    {movies.map((movie) => (
-                        <MovieCard key={movie.imdbID} movie={movie} />
-                    ))}
-                </div>
+                {!isLoading && !error && movies.length > 0 && (
+                    <MovieList movies={movies} />
+                )}
             </section>
         </main>
     );
