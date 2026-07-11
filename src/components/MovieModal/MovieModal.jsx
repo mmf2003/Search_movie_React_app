@@ -83,25 +83,58 @@ function MovieModal({ movie, isLoading, error, onClose }) {
                                 {movie.Year} · {movie.Runtime} · {movie.Rated}
                             </p>
 
-                            <p>
-                                <strong>Жанр:</strong> {movie.Genre}
-                            </p>
+                            <div className="movie-modal__genres">
+                                {movie.Genre !== "N/A" &&
+                                    movie.Genre.split(", ").map((genre) => (
+                                        <span
+                                            className="movie-modal__genre"
+                                            key={genre}
+                                        >
+                                            {genre}
+                                        </span>
+                                    ))}
+                            </div>
 
-                            <p>
-                                <strong>Режиссёр:</strong> {movie.Director}
-                            </p>
+                            <div className="movie-modal__rating">
+                                <span className="movie-modal__rating-star">
+                                    ★
+                                </span>
 
-                            <p>
-                                <strong>Актёры:</strong> {movie.Actors}
-                            </p>
+                                <div>
+                                    <span className="movie-modal__rating-value">
+                                        {movie.imdbRating !== "N/A"
+                                            ? movie.imdbRating
+                                            : "—"}
+                                    </span>
 
-                            <p>
-                                <strong>Страна:</strong> {movie.Country}
-                            </p>
+                                    <span className="movie-modal__rating-scale">
+                                        {" "}
+                                        / 10
+                                    </span>
 
-                            <p>
-                                <strong>IMDb:</strong> {movie.imdbRating}
-                            </p>
+                                    <p className="movie-modal__rating-label">
+                                        IMDb rating
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="movie-modal__facts">
+                                <p>
+                                    <strong>Режиссёр:</strong> {movie.Director}
+                                </p>
+
+                                <p>
+                                    <strong>Актёры:</strong> {movie.Actors}
+                                </p>
+
+                                <p>
+                                    <strong>Страна:</strong> {movie.Country}
+                                </p>
+
+                                <p>
+                                    <strong>Язык:</strong> {movie.Language}
+                                </p>
+                            </div>
 
                             <p className="movie-modal__plot">{movie.Plot}</p>
                         </div>
