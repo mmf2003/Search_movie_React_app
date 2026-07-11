@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./MovieModal.css";
+import Loader from "../Loader/Loader";
 
 function MovieModal({ movie, isLoading, error, onClose }) {
     const [posterError, setPosterError] = useState(false);
@@ -45,11 +46,7 @@ function MovieModal({ movie, isLoading, error, onClose }) {
                     ✕
                 </button>
 
-                {isLoading && (
-                    <p className="movie-modal__message">
-                        Загружаем информацию...
-                    </p>
-                )}
+                {isLoading && <Loader />}
 
                 {error && (
                     <p className="movie-modal__message movie-modal__message--error">

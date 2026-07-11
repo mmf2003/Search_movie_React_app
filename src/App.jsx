@@ -3,6 +3,7 @@ import SearchBar from "./components/SearchBar/SearchBar";
 import Loader from "./components/Loader/Loader";
 import MovieList from "./components/MovieList/MovieList";
 import useDebounce from "./hooks/useDebounce";
+import SkeletonList from "./components/SkeletonList/SkeletonList";
 import "./App.css";
 
 import { getMovieDetails, searchMovies } from "./services/api";
@@ -58,29 +59,44 @@ function App() {
     };
 
     useEffect(() => {
-        if (query.trim().length < 3) {
+        const normalizedQuery = debouncedQuery.trim();
+
+        if (normalizedQuery.length < 3) {
             return;
         }
 
-        const timerId = setTimeout(async () => {
+        const controller = new AbortController();
+
+        const loadMovies = async () => {
             try {
                 setError("");
 
-                const moviesData = await searchMovies(query);
+                const moviesData = await searchMovies(
+                    normalizedQuery,
+                    controller.signal,
+                );
 
                 setMovies(moviesData);
             } catch (error) {
+                if (error.name === "AbortError") {
+                    return;
+                }
+
                 setMovies([]);
                 setError(error.message);
             } finally {
-                setIsLoading(false);
+                if (!controller.signal.aborted) {
+                    setIsLoading(false);
+                }
             }
-        }, 500);
+        };
+
+        loadMovies();
 
         return () => {
-            clearTimeout(timerId);
+            controller.abort();
         };
-    }, [query]);
+    }, [debouncedQuery]);
 
     return (
         <main className="app">
@@ -107,9 +123,9 @@ function App() {
                     </p>
                 )}
 
-                {isLoading && <Loader />}
+                {isLoading && <SkeletonList count={8} />}
 
-                {error && (
+                {!isLoading && error && (
                     <p className="results__message results__message--error">
                         {error}
                     </p>
@@ -126,6 +142,16 @@ function App() {
                     <MovieList
                         movies={movies}
                         onMovieSelect={handleMovieSelect}
+                    />
+                )}
+
+                {isModalOpen && (
+                    <MovieModal
+                        key={selectedMovie?.imdbID || "movie-modal"}
+                        movie={selectedMovie}
+                        isLoading={isDetailsLoading}
+                        error={detailsError}
+                        onClose={handleModalClose}
                     />
                 )}
             </section>
