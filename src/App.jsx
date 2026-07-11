@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import SearchBar from "./components/SearchBar/SearchBar";
+import MovieCard from "./components/MovieCard/MovieCard";
 import { searchMovies } from "./services/api";
 import "./App.css";
-import MovieCard from "./components/MovieCard/MovieCard";
 
 function App() {
     const [query, setQuery] = useState("");
@@ -10,17 +10,23 @@ function App() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
 
-    useEffect(() => {
-        if (query.trim().length < 3) {
+    const handleQueryChange = (newQuery) => {
+        setQuery(newQuery);
+
+        if (newQuery.trim().length < 3) {
             setMovies([]);
             setError("");
             setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (query.trim().length < 3) {
             return;
         }
 
-        const loadMovies = async () => {
+        const timerId = setTimeout(async () => {
             try {
-                setIsLoading(true);
                 setError("");
 
                 const moviesData = await searchMovies(query);
@@ -32,9 +38,11 @@ function App() {
             } finally {
                 setIsLoading(false);
             }
-        };
+        }, 500);
 
-        loadMovies();
+        return () => {
+            clearTimeout(timerId);
+        };
     }, [query]);
 
     return (
@@ -52,7 +60,7 @@ function App() {
                     time.
                 </p>
 
-                <SearchBar query={query} onQueryChange={setQuery} />
+                <SearchBar query={query} onQueryChange={handleQueryChange} />
             </section>
 
             <section className="results">
