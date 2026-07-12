@@ -1,7 +1,7 @@
 const API_KEY = "52d31e9";
 const BASE_URL = "https://www.omdbapi.com/";
 
-export async function searchMovies(query, page = 1, signal) {
+export async function searchMovies(query, page = 1, type = "", signal) {
     const trimmedQuery = query.trim();
 
     if (!trimmedQuery) {
@@ -11,12 +11,19 @@ export async function searchMovies(query, page = 1, signal) {
         };
     }
 
-    const response = await fetch(
-        `${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(
-            trimmedQuery,
-        )}&page=${page}`,
-        { signal },
-    );
+    const params = new URLSearchParams({
+        apikey: API_KEY,
+        s: trimmedQuery,
+        page: String(page),
+    });
+
+    if (type) {
+        params.set("type", type);
+    }
+
+    const response = await fetch(`${BASE_URL}?${params.toString()}`, {
+        signal,
+    });
 
     if (!response.ok) {
         throw new Error("Не удалось подключиться к серверу");

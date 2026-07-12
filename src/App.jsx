@@ -6,6 +6,7 @@ import SkeletonList from "./components/SkeletonList/SkeletonList";
 import useLocalStorage from "./hooks/useLocalStorage";
 import Favorites from "./components/Favorites/Favorites";
 import Pagination from "./components/Pagination/Pagination";
+import TypeFilter from "./components/TypeFilter/TypeFilter";
 import "./App.css";
 
 import { getMovieDetails, searchMovies } from "./services/api";
@@ -17,6 +18,7 @@ function App() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
+    const [typeFilter, setTypeFilter] = useState("");
     const [totalResults, setTotalResults] = useState(0);
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [isDetailsLoading, setIsDetailsLoading] = useState(false);
@@ -95,6 +97,16 @@ function App() {
         });
     };
 
+    const handleTypeFilterChange = (type) => {
+        setTypeFilter(type);
+        setCurrentPage(1);
+
+        if (query.trim().length >= 3) {
+            setIsLoading(true);
+            setError("");
+        }
+    };
+
     useEffect(() => {
         const normalizedQuery = debouncedQuery.trim();
 
@@ -111,6 +123,7 @@ function App() {
                 const searchResult = await searchMovies(
                     normalizedQuery,
                     currentPage,
+                    typeFilter,
                     controller.signal,
                 );
 
@@ -135,7 +148,7 @@ function App() {
         return () => {
             controller.abort();
         };
-    }, [debouncedQuery, currentPage]);
+    }, [debouncedQuery, currentPage, typeFilter]);
 
     return (
         <main className="app">
@@ -153,6 +166,12 @@ function App() {
                 </p>
 
                 <SearchBar query={query} onQueryChange={handleQueryChange} />
+
+                <TypeFilter
+                    value={typeFilter}
+                    onChange={handleTypeFilterChange}
+                    disabled={query.trim().length < 3}
+                />
 
                 {query.trim().length > 0 && query.trim().length < 3 && (
                     <p className="hero__message">Введите минимум 3 символа</p>
