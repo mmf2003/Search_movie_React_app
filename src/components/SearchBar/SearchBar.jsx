@@ -6,8 +6,9 @@ function SearchBar({ query, onQueryChange }) {
             <input
                 className="search-bar__input"
                 type="search"
-                placeholder="Search for movies..."
                 value={query}
+                placeholder="Search for movies..."
+                autoComplete="off"
                 onChange={(event) => onQueryChange(event.target.value)}
             />
         </div>

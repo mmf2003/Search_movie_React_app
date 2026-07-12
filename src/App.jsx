@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SearchBar from "./components/SearchBar/SearchBar";
 import MovieList from "./components/MovieList/MovieList";
 import useDebounce from "./hooks/useDebounce";
@@ -7,6 +7,7 @@ import useLocalStorage from "./hooks/useLocalStorage";
 import Favorites from "./components/Favorites/Favorites";
 import Pagination from "./components/Pagination/Pagination";
 import TypeFilter from "./components/TypeFilter/TypeFilter";
+import SearchHistory from "./components/SearchHistory/SearchHistory";
 import "./App.css";
 
 import { getMovieDetails, searchMovies } from "./services/api";
@@ -28,16 +29,26 @@ function App() {
     const debouncedQuery = useDebounce(query, 500);
     const totalPages = Math.ceil(totalResults / 10);
     const [favorites, setFavorites] = useLocalStorage("movie-favorites", []);
+    const [searchHistory, setSearchHistory] = useLocalStorage(
+        "movie-search-history",
+        [],
+    );
+    const searchControllerRef = useRef(null);
+
+    const resetSearchResults = () => {
+        setMovies([]);
+        setTotalResults(0);
+        setError("");
+        setIsLoading(false);
+        setCurrentPage(1);
+    };
 
     const handleQueryChange = (newQuery) => {
         setQuery(newQuery);
         setCurrentPage(1);
 
         if (newQuery.trim().length < 3) {
-            setMovies([]);
-            setTotalResults(0);
-            setError("");
-            setIsLoading(false);
+            resetSearchResults();
             return;
         }
 
@@ -107,14 +118,31 @@ function App() {
         }
     };
 
+    const handleHistorySelect = (historyQuery) => {
+        handleQueryChange(historyQuery);
+    };
+
+    const handleClearHistory = () => {
+        searchControllerRef.current?.abort();
+
+        setSearchHistory([]);
+        setQuery("");
+        setTypeFilter("");
+        resetSearchResults();
+    };
+
     useEffect(() => {
         const normalizedQuery = debouncedQuery.trim();
+        const currentQuery = query.trim();
 
-        if (normalizedQuery.length < 3) {
+        if (normalizedQuery.length < 3 || normalizedQuery !== currentQuery) {
             return;
         }
 
+        searchControllerRef.current?.abort();
+
         const controller = new AbortController();
+        searchControllerRef.current = controller;
 
         const loadMovies = async () => {
             try {
@@ -127,14 +155,34 @@ function App() {
                     controller.signal,
                 );
 
+                if (controller.signal.aborted) {
+                    return;
+                }
+
                 setMovies(searchResult.movies);
                 setTotalResults(searchResult.totalResults);
+
+                if (searchResult.movies.length > 0) {
+                    setSearchHistory((currentHistory) => {
+                        const historyWithoutDuplicate = currentHistory.filter(
+                            (item) =>
+                                item.toLowerCase() !==
+                                normalizedQuery.toLowerCase(),
+                        );
+
+                        return [
+                            normalizedQuery,
+                            ...historyWithoutDuplicate,
+                        ].slice(0, 6);
+                    });
+                }
             } catch (error) {
                 if (error.name === "AbortError") {
                     return;
                 }
 
                 setMovies([]);
+                setTotalResults(0);
                 setError(error.message);
             } finally {
                 if (!controller.signal.aborted) {
@@ -148,7 +196,7 @@ function App() {
         return () => {
             controller.abort();
         };
-    }, [debouncedQuery, currentPage, typeFilter]);
+    }, [query, debouncedQuery, currentPage, typeFilter, setSearchHistory]);
 
     return (
         <main className="app">
@@ -171,6 +219,12 @@ function App() {
                     value={typeFilter}
                     onChange={handleTypeFilterChange}
                     disabled={query.trim().length < 3}
+                />
+
+                <SearchHistory
+                    history={searchHistory}
+                    onSelect={handleHistorySelect}
+                    onClear={handleClearHistory}
                 />
 
                 {query.trim().length > 0 && query.trim().length < 3 && (
@@ -202,22 +256,25 @@ function App() {
                         <p className="results__message">Фильмы не найдены</p>
                     )}
 
-                {!isLoading && !error && movies.length > 0 && (
-                    <>
-                        <MovieList
-                            movies={movies}
-                            onMovieSelect={handleMovieSelect}
-                            favorites={favorites}
-                            onToggleFavorite={toggleFavorite}
-                        />
+                {!isLoading &&
+                    !error &&
+                    query.trim().length >= 3 &&
+                    movies.length > 0 && (
+                        <>
+                            <MovieList
+                                movies={movies}
+                                onMovieSelect={handleMovieSelect}
+                                favorites={favorites}
+                                onToggleFavorite={toggleFavorite}
+                            />
 
-                        <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={handlePageChange}
-                        />
-                    </>
-                )}
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={handlePageChange}
+                            />
+                        </>
+                    )}
             </section>
 
             {isModalOpen && (
