@@ -153,7 +153,7 @@ function App() {
                     </p>
                 )}
 
-                {isLoading && <SkeletonList count={8} />}
+                {isLoading && <SkeletonList count={10} />}
 
                 {!isLoading && error && (
                     <p className="results__message results__message--error">
