@@ -1,15 +1,20 @@
 const API_KEY = "52d31e9";
 const BASE_URL = "https://www.omdbapi.com/";
 
-export async function searchMovies(query, signal) {
+export async function searchMovies(query, page = 1, signal) {
     const trimmedQuery = query.trim();
 
     if (!trimmedQuery) {
-        return [];
+        return {
+            movies: [],
+            totalResults: 0,
+        };
     }
 
     const response = await fetch(
-        `${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(trimmedQuery)}`,
+        `${BASE_URL}?apikey=${API_KEY}&s=${encodeURIComponent(
+            trimmedQuery,
+        )}&page=${page}`,
         { signal },
     );
 
@@ -21,13 +26,19 @@ export async function searchMovies(query, signal) {
 
     if (data.Response === "False") {
         if (data.Error === "Movie not found!") {
-            return [];
+            return {
+                movies: [],
+                totalResults: 0,
+            };
         }
 
         throw new Error(data.Error || "Произошла ошибка при поиске");
     }
 
-    return data.Search;
+    return {
+        movies: data.Search,
+        totalResults: Number(data.totalResults),
+    };
 }
 
 export async function getMovieDetails(imdbID) {

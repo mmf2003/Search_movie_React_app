@@ -5,6 +5,7 @@ import useDebounce from "./hooks/useDebounce";
 import SkeletonList from "./components/SkeletonList/SkeletonList";
 import useLocalStorage from "./hooks/useLocalStorage";
 import Favorites from "./components/Favorites/Favorites";
+import Pagination from "./components/Pagination/Pagination";
 import "./App.css";
 
 import { getMovieDetails, searchMovies } from "./services/api";
@@ -15,19 +16,24 @@ function App() {
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalResults, setTotalResults] = useState(0);
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [isDetailsLoading, setIsDetailsLoading] = useState(false);
     const [detailsError, setDetailsError] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const debouncedQuery = useDebounce(query, 500);
+    const totalPages = Math.ceil(totalResults / 10);
     const [favorites, setFavorites] = useLocalStorage("movie-favorites", []);
 
     const handleQueryChange = (newQuery) => {
         setQuery(newQuery);
+        setCurrentPage(1);
 
         if (newQuery.trim().length < 3) {
             setMovies([]);
+            setTotalResults(0);
             setError("");
             setIsLoading(false);
             return;
@@ -80,6 +86,15 @@ function App() {
         });
     };
 
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+
+        window.scrollTo({
+            top: 500,
+            behavior: "smooth",
+        });
+    };
+
     useEffect(() => {
         const normalizedQuery = debouncedQuery.trim();
 
@@ -93,12 +108,14 @@ function App() {
             try {
                 setError("");
 
-                const moviesData = await searchMovies(
+                const searchResult = await searchMovies(
                     normalizedQuery,
+                    currentPage,
                     controller.signal,
                 );
 
-                setMovies(moviesData);
+                setMovies(searchResult.movies);
+                setTotalResults(searchResult.totalResults);
             } catch (error) {
                 if (error.name === "AbortError") {
                     return;
@@ -118,7 +135,7 @@ function App() {
         return () => {
             controller.abort();
         };
-    }, [debouncedQuery]);
+    }, [debouncedQuery, currentPage]);
 
     return (
         <main className="app">
@@ -169,12 +186,20 @@ function App() {
                     )}
 
                 {!isLoading && !error && movies.length > 0 && (
-                    <MovieList
-                        movies={movies}
-                        onMovieSelect={handleMovieSelect}
-                        favorites={favorites}
-                        onToggleFavorite={toggleFavorite}
-                    />
+                    <>
+                        <MovieList
+                            movies={movies}
+                            onMovieSelect={handleMovieSelect}
+                            favorites={favorites}
+                            onToggleFavorite={toggleFavorite}
+                        />
+
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={handlePageChange}
+                        />
+                    </>
                 )}
             </section>
 
