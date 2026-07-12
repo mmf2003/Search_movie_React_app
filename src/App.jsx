@@ -153,6 +153,10 @@ function App() {
                 </p>
 
                 <SearchBar query={query} onQueryChange={handleQueryChange} />
+
+                {query.trim().length > 0 && query.trim().length < 3 && (
+                    <p className="hero__message">Введите минимум 3 символа</p>
+                )}
             </section>
 
             {favorites.length > 0 && (
@@ -164,12 +168,6 @@ function App() {
             )}
 
             <section className="results">
-                {query.trim().length > 0 && query.trim().length < 3 && (
-                    <p className="results__message">
-                        Введите минимум 3 символа
-                    </p>
-                )}
-
                 {isLoading && <SkeletonList count={10} />}
 
                 {!isLoading && error && (
