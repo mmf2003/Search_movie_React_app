@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import "./MovieModal.css";
-import Loader from "../Loader/Loader";
+import MovieModalSkeleton from "./MovieModalSkeleton";
 
 function MovieModal({
     movie,
@@ -37,12 +38,42 @@ function MovieModal({
     const hasPoster = movie?.Poster && movie.Poster !== "N/A" && !posterError;
 
     return (
-        <div className="movie-modal" onClick={handleBackdropClick}>
-            <div
+        <motion.div
+            className="movie-modal"
+            onClick={handleBackdropClick}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{
+                duration: 0.22,
+                ease: "easeOut",
+            }}
+        >
+            <motion.div
                 className="movie-modal__content"
                 role="dialog"
                 aria-modal="true"
                 aria-label="Подробная информация о фильме"
+                initial={{
+                    opacity: 0,
+                    y: 12,
+                    scale: 0.985,
+                }}
+                animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                }}
+                exit={{
+                    opacity: 0,
+                    y: 8,
+                    scale: 0.99,
+                }}
+                transition={{
+                    duration: 0.3,
+                    ease: [0.22, 1, 0.36, 1],
+                }}
+                onClick={(event) => event.stopPropagation()}
             >
                 <button
                     className="movie-modal__close"
@@ -53,111 +84,165 @@ function MovieModal({
                     ✕
                 </button>
 
-                {isLoading && <Loader />}
+                <AnimatePresence mode="wait" initial={false}>
+                    {isLoading && (
+                        <motion.div
+                            key="skeleton"
+                            className="movie-modal__state-wrapper"
+                            initial={{ opacity: 1 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.18 }}
+                        >
+                            <MovieModalSkeleton />
+                        </motion.div>
+                    )}
 
-                {error && (
-                    <p className="movie-modal__message movie-modal__message--error">
-                        {error}
-                    </p>
-                )}
-
-                {!isLoading && !error && movie && (
-                    <div className="movie-modal__body">
-                        <div className="movie-modal__poster-wrapper">
-                            {hasPoster ? (
-                                <img
-                                    className="movie-modal__poster"
-                                    src={movie.Poster}
-                                    alt={`Постер фильма ${movie.Title}`}
-                                    onError={() => setPosterError(true)}
-                                />
-                            ) : (
-                                <div className="movie-modal__placeholder">
-                                    Постер отсутствует
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="movie-modal__details">
-                            <h2 className="movie-modal__title">
-                                {movie.Title}
-                            </h2>
-
-                            <button
-                                className={`movie-modal__favorite ${
-                                    isFavorite
-                                        ? "movie-modal__favorite--active"
-                                        : ""
-                                }`}
-                                type="button"
-                                onClick={() => onToggleFavorite(movie)}
-                                aria-pressed={isFavorite}
-                            >
-                                {isFavorite ? "♥ В избранном" : "♡ В избранное"}
-                            </button>
-                            <p className="movie-modal__meta">
-                                {movie.Year} · {movie.Runtime} · {movie.Rated}
+                    {!isLoading && error && (
+                        <motion.div
+                            key="error"
+                            className="movie-modal__state-wrapper"
+                            initial={{
+                                opacity: 0,
+                                y: 8,
+                            }}
+                            animate={{
+                                opacity: 1,
+                                y: 0,
+                            }}
+                            exit={{
+                                opacity: 0,
+                            }}
+                            transition={{
+                                duration: 0.22,
+                            }}
+                        >
+                            <p className="movie-modal__message movie-modal__message--error">
+                                {error}
                             </p>
+                        </motion.div>
+                    )}
 
-                            <div className="movie-modal__genres">
-                                {movie.Genre !== "N/A" &&
-                                    movie.Genre.split(", ").map((genre) => (
-                                        <span
-                                            className="movie-modal__genre"
-                                            key={genre}
-                                        >
-                                            {genre}
-                                        </span>
-                                    ))}
+                    {!isLoading && !error && movie && (
+                        <motion.div
+                            key={movie.imdbID}
+                            className="movie-modal__body"
+                            initial={{
+                                opacity: 0,
+                            }}
+                            animate={{
+                                opacity: 1,
+                            }}
+                            exit={{
+                                opacity: 0,
+                            }}
+                            transition={{
+                                duration: 0.25,
+                            }}
+                        >
+                            <div className="movie-modal__poster-wrapper">
+                                {hasPoster ? (
+                                    <img
+                                        className="movie-modal__poster"
+                                        src={movie.Poster}
+                                        alt={`Постер фильма ${movie.Title}`}
+                                        onError={() => setPosterError(true)}
+                                    />
+                                ) : (
+                                    <div className="movie-modal__placeholder">
+                                        Постер отсутствует
+                                    </div>
+                                )}
                             </div>
 
-                            <div className="movie-modal__rating">
-                                <span className="movie-modal__rating-star">
-                                    ★
-                                </span>
+                            <div className="movie-modal__details">
+                                <h2 className="movie-modal__title">
+                                    {movie.Title}
+                                </h2>
 
-                                <div>
-                                    <span className="movie-modal__rating-value">
-                                        {movie.imdbRating !== "N/A"
-                                            ? movie.imdbRating
-                                            : "—"}
+                                <button
+                                    className={`movie-modal__favorite ${
+                                        isFavorite
+                                            ? "movie-modal__favorite--active"
+                                            : ""
+                                    }`}
+                                    type="button"
+                                    onClick={() => onToggleFavorite(movie)}
+                                    aria-pressed={isFavorite}
+                                >
+                                    {isFavorite
+                                        ? "♥ В избранном"
+                                        : "♡ В избранное"}
+                                </button>
+
+                                <p className="movie-modal__meta">
+                                    {movie.Year} · {movie.Runtime} ·{" "}
+                                    {movie.Rated}
+                                </p>
+
+                                <div className="movie-modal__genres">
+                                    {movie.Genre !== "N/A" &&
+                                        movie.Genre.split(", ").map((genre) => (
+                                            <span
+                                                className="movie-modal__genre"
+                                                key={genre}
+                                            >
+                                                {genre}
+                                            </span>
+                                        ))}
+                                </div>
+
+                                <div className="movie-modal__rating">
+                                    <span className="movie-modal__rating-star">
+                                        ★
                                     </span>
 
-                                    <span className="movie-modal__rating-scale">
-                                        {" "}
-                                        / 10
-                                    </span>
+                                    <div>
+                                        <span className="movie-modal__rating-value">
+                                            {movie.imdbRating !== "N/A"
+                                                ? movie.imdbRating
+                                                : "—"}
+                                        </span>
 
-                                    <p className="movie-modal__rating-label">
-                                        IMDb rating
+                                        <span className="movie-modal__rating-scale">
+                                            {" "}
+                                            / 10
+                                        </span>
+
+                                        <p className="movie-modal__rating-label">
+                                            IMDb rating
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="movie-modal__facts">
+                                    <p>
+                                        <strong>Режиссёр:</strong>{" "}
+                                        {movie.Director}
+                                    </p>
+
+                                    <p>
+                                        <strong>Актёры:</strong> {movie.Actors}
+                                    </p>
+
+                                    <p>
+                                        <strong>Страна:</strong> {movie.Country}
+                                    </p>
+
+                                    <p>
+                                        <strong>Язык:</strong> {movie.Language}
                                     </p>
                                 </div>
-                            </div>
 
-                            <div className="movie-modal__facts">
-                                <p>
-                                    <strong>Режиссёр:</strong> {movie.Director}
-                                </p>
-
-                                <p>
-                                    <strong>Актёры:</strong> {movie.Actors}
-                                </p>
-
-                                <p>
-                                    <strong>Страна:</strong> {movie.Country}
-                                </p>
-
-                                <p>
-                                    <strong>Язык:</strong> {movie.Language}
+                                <p className="movie-modal__plot">
+                                    {movie.Plot}
                                 </p>
                             </div>
-
-                            <p className="movie-modal__plot">{movie.Plot}</p>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </motion.div>
+        </motion.div>
     );
 }
 

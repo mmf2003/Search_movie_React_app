@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { AnimatePresence } from "motion/react";
 import SearchBar from "./components/SearchBar/SearchBar";
 import MovieList from "./components/MovieList/MovieList";
 import useDebounce from "./hooks/useDebounce";
@@ -277,19 +278,23 @@ function App() {
                     )}
             </section>
 
-            {isModalOpen && (
-                <MovieModal
-                    key={selectedMovie?.imdbID || "movie-modal"}
-                    movie={selectedMovie}
-                    isLoading={isDetailsLoading}
-                    error={detailsError}
-                    isFavorite={
-                        selectedMovie ? isFavorite(selectedMovie.imdbID) : false
-                    }
-                    onToggleFavorite={toggleFavorite}
-                    onClose={handleModalClose}
-                />
-            )}
+            <AnimatePresence>
+                {isModalOpen && (
+                    <MovieModal
+                        key="movie-modal"
+                        movie={selectedMovie}
+                        isLoading={isDetailsLoading}
+                        error={detailsError}
+                        isFavorite={
+                            selectedMovie
+                                ? isFavorite(selectedMovie.imdbID)
+                                : false
+                        }
+                        onToggleFavorite={toggleFavorite}
+                        onClose={handleModalClose}
+                    />
+                )}
+            </AnimatePresence>
         </main>
     );
 }
