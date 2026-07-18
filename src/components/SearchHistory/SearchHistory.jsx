@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import "./SearchHistory.css";
 
 function SearchHistory({ history, onSelect, onClear }) {
@@ -18,12 +19,17 @@ function SearchHistory({ history, onSelect, onClear }) {
             >
                 <span>Recent searches</span>
 
-                <svg
-                    className={`search-history__chevron ${
-                        isOpen ? "search-history__chevron--open" : ""
-                    }`}
+                <motion.svg
+                    className="search-history__chevron"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
+                    animate={{
+                        rotate: isOpen ? 180 : 0,
+                    }}
+                    transition={{
+                        duration: 0.25,
+                        ease: "easeInOut",
+                    }}
                 >
                     <path
                         d="M6 9L12 15L18 9"
@@ -33,35 +39,80 @@ function SearchHistory({ history, onSelect, onClear }) {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                     />
-                </svg>
+                </motion.svg>
             </button>
 
-            {isOpen && (
-                <>
-                    <div className="search-history__list">
-                        {history.map((item) => (
-                            <button
-                                key={item}
-                                className="search-history__item"
-                                type="button"
-                                onClick={() => onSelect(item)}
-                            >
-                                {item}
-                            </button>
-                        ))}
-                    </div>
+            <AnimatePresence initial={false}>
+                {isOpen && (
+                    <motion.div
+                        className="search-history__content"
+                        initial={{
+                            height: 0,
+                            opacity: 0,
+                        }}
+                        animate={{
+                            height: "auto",
+                            opacity: 1,
+                        }}
+                        exit={{
+                            height: 0,
+                            opacity: 0,
+                        }}
+                        transition={{
+                            height: {
+                                duration: 0.32,
+                                ease: [0.22, 1, 0.36, 1],
+                            },
+                            opacity: {
+                                duration: 0.2,
+                            },
+                        }}
+                    >
+                        <div className="search-history__list">
+                            <AnimatePresence initial={false}>
+                                {history.map((item) => (
+                                    <motion.button
+                                        key={item}
+                                        className="search-history__item"
+                                        type="button"
+                                        onClick={() => onSelect(item)}
+                                        initial={{
+                                            opacity: 0,
+                                            scale: 0.92,
+                                            y: -5,
+                                        }}
+                                        animate={{
+                                            opacity: 1,
+                                            scale: 1,
+                                            y: 0,
+                                        }}
+                                        exit={{
+                                            opacity: 0,
+                                            scale: 0.92,
+                                        }}
+                                        transition={{
+                                            duration: 0.2,
+                                            ease: [0.22, 1, 0.36, 1],
+                                        }}
+                                    >
+                                        {item}
+                                    </motion.button>
+                                ))}
+                            </AnimatePresence>
+                        </div>
 
-                    <div className="search-history__footer">
-                        <button
-                            className="search-history__clear"
-                            type="button"
-                            onClick={onClear}
-                        >
-                            Clear
-                        </button>
-                    </div>
-                </>
-            )}
+                        <div className="search-history__footer">
+                            <button
+                                className="search-history__clear"
+                                type="button"
+                                onClick={onClear}
+                            >
+                                Clear
+                            </button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </section>
     );
 }

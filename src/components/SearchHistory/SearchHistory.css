@@ -44,20 +44,6 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
-
-    animation: historyFade 0.2s ease;
-}
-
-@keyframes historyFade {
-    from {
-        opacity: 0;
-        transform: translateY(-5px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .search-history__item {
@@ -118,12 +104,6 @@
 .search-history__chevron {
     width: 18px;
     height: 18px;
-
-    transition: transform 0.25s ease;
-}
-
-.search-history__chevron--open {
-    transform: rotate(180deg);
 }
 
 .search-history__footer {
@@ -131,4 +111,8 @@
     justify-content: flex-end;
 
     margin-top: 14px;
+}
+
+.search-history__content {
+    overflow: hidden;
 }
