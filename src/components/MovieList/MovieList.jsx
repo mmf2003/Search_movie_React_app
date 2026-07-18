@@ -4,7 +4,7 @@ import "./MovieList.css";
 function MovieList({ movies, onMovieSelect, favorites, onToggleFavorite }) {
     return (
         <div className="movies">
-            {movies.map((movie) => {
+            {movies.map((movie, index) => {
                 const movieIsFavorite = favorites.some(
                     (favorite) => favorite.imdbID === movie.imdbID,
                 );
@@ -13,6 +13,7 @@ function MovieList({ movies, onMovieSelect, favorites, onToggleFavorite }) {
                     <MovieCard
                         key={movie.imdbID}
                         movie={movie}
+                        index={index}
                         isFavorite={movieIsFavorite}
                         onSelect={onMovieSelect}
                         onToggleFavorite={onToggleFavorite}

@@ -1,7 +1,8 @@
 import { useState } from "react";
+import { motion } from "motion/react";
 import "./MovieCard.css";
 
-function MovieCard({ movie, isFavorite, onSelect, onToggleFavorite }) {
+function MovieCard({ movie, index, isFavorite, onSelect, onToggleFavorite }) {
     const [posterError, setPosterError] = useState(false);
 
     const hasPoster = movie.Poster && movie.Poster !== "N/A" && !posterError;
@@ -23,12 +24,31 @@ function MovieCard({ movie, isFavorite, onSelect, onToggleFavorite }) {
     };
 
     return (
-        <article
+        <motion.article
             className="movie-card"
             role="button"
             tabIndex={0}
             onClick={openMovie}
             onKeyDown={handleKeyDown}
+            initial={{
+                opacity: 0,
+                y: 12,
+            }}
+            animate={{
+                opacity: 1,
+                y: 0,
+            }}
+            transition={{
+                duration: 0.45,
+                delay: index * 0.045,
+                ease: [0.22, 1, 0.36, 1],
+            }}
+            whileHover={{
+                y: -5,
+            }}
+            whileTap={{
+                scale: 0.98,
+            }}
         >
             <button
                 className={`movie-card__favorite ${
@@ -66,7 +86,7 @@ function MovieCard({ movie, isFavorite, onSelect, onToggleFavorite }) {
 
                 <p className="movie-card__info">Тип: {movie.Type}</p>
             </div>
-        </article>
+        </motion.article>
     );
 }
 
