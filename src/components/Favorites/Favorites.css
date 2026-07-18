@@ -92,6 +92,10 @@
     scrollbar-color: rgba(167, 139, 250, 0.45) rgba(255, 255, 255, 0.05);
 }
 
+.favorites__item {
+    flex: 0 0 160px;
+}
+
 .favorites__track::-webkit-scrollbar {
     height: 7px;
 }
@@ -119,7 +123,29 @@
         display: none;
     }
 
-    .favorite-card {
+    .favorites__item {
         flex-basis: 130px;
     }
+}
+
+.favorites__track {
+    position: relative;
+
+    display: flex;
+    gap: 18px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding: 4px 2px 14px;
+
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(167, 139, 250, 0.45) rgba(255, 255, 255, 0.05);
+}
+
+.favorites__item {
+    flex: 0 0 150px;
+    width: 150px;
+    min-width: 0;
 }

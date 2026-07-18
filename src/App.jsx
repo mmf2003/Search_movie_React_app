@@ -233,13 +233,16 @@ function App() {
                 )}
             </section>
 
-            {favorites.length > 0 && (
-                <Favorites
-                    favorites={favorites}
-                    onMovieSelect={handleMovieSelect}
-                    onToggleFavorite={toggleFavorite}
-                />
-            )}
+            <AnimatePresence initial={false}>
+                {favorites.length > 0 && (
+                    <Favorites
+                        key="favorites"
+                        favorites={favorites}
+                        onMovieSelect={handleMovieSelect}
+                        onToggleFavorite={toggleFavorite}
+                    />
+                )}
+            </AnimatePresence>
 
             <section className="results">
                 {isLoading && <SkeletonList count={10} />}
