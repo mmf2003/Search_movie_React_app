@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
+import { Link } from "react-router-dom";
 import "./MovieModal.css";
 import MovieModalSkeleton from "./MovieModalSkeleton";
 
@@ -160,20 +161,30 @@ function MovieModal({
                                     {movie.Title}
                                 </h2>
 
-                                <button
-                                    className={`movie-modal__favorite ${
-                                        isFavorite
-                                            ? "movie-modal__favorite--active"
-                                            : ""
-                                    }`}
-                                    type="button"
-                                    onClick={() => onToggleFavorite(movie)}
-                                    aria-pressed={isFavorite}
-                                >
-                                    {isFavorite
-                                        ? "♥ В избранном"
-                                        : "♡ В избранное"}
-                                </button>
+                                <div className="movie-modal__actions">
+                                    <button
+                                        className={`movie-modal__favorite ${
+                                            isFavorite
+                                                ? "movie-modal__favorite--active"
+                                                : ""
+                                        }`}
+                                        type="button"
+                                        onClick={() => onToggleFavorite(movie)}
+                                        aria-pressed={isFavorite}
+                                    >
+                                        {isFavorite
+                                            ? "♥ В избранном"
+                                            : "♡ В избранное"}
+                                    </button>
+
+                                    <Link
+                                        className="movie-modal__page-link"
+                                        to={`/movie/${movie.imdbID}`}
+                                        onClick={onClose}
+                                    >
+                                        Open full page →
+                                    </Link>
+                                </div>
 
                                 <p className="movie-modal__meta">
                                     {movie.Year} · {movie.Runtime} ·{" "}
