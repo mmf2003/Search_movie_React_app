@@ -52,9 +52,12 @@ export async function searchMovies(query, page = 1, type = "", signal) {
     };
 }
 
-export async function getMovieDetails(imdbID) {
+export async function getMovieDetails(imdbID, signal) {
     const response = await fetch(
         `${BASE_URL}?apikey=${API_KEY}&i=${encodeURIComponent(imdbID)}&plot=full`,
+        {
+            signal,
+        },
     );
 
     if (!response.ok) {
