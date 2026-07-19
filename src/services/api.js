@@ -1,5 +1,9 @@
-const API_KEY = "52d31e9";
+const API_KEY = import.meta.env.VITE_OMDB_API_KEY;
 const BASE_URL = "https://www.omdbapi.com/";
+
+if (!API_KEY) {
+    throw new Error("VITE_OMDB_API_KEY is not configured");
+}
 
 export async function searchMovies(query, page = 1, type = "", signal) {
     const trimmedQuery = query.trim();
