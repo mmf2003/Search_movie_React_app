@@ -50,6 +50,7 @@ function HomePage() {
         [],
     );
     const searchControllerRef = useRef(null);
+    const detailsControllerRef = useRef(null);
 
     const resetSearchResults = () => {
         setMovies([]);
@@ -73,26 +74,47 @@ function HomePage() {
     };
 
     const handleMovieSelect = async (imdbID) => {
+        detailsControllerRef.current?.abort();
+
+        const controller = new AbortController();
+        detailsControllerRef.current = controller;
+
         try {
             setIsModalOpen(true);
             setIsDetailsLoading(true);
             setDetailsError("");
             setSelectedMovie(null);
 
-            const movieDetails = await getMovieDetails(imdbID);
+            const movieDetails = await getMovieDetails(
+                imdbID,
+                controller.signal,
+            );
+
+            if (controller.signal.aborted) {
+                return;
+            }
 
             setSelectedMovie(movieDetails);
         } catch (error) {
+            if (error.name === "AbortError") {
+                return;
+            }
+
             setDetailsError(error.message);
         } finally {
-            setIsDetailsLoading(false);
+            if (!controller.signal.aborted) {
+                setIsDetailsLoading(false);
+            }
         }
     };
 
     const handleModalClose = () => {
+        detailsControllerRef.current?.abort();
+
         setIsModalOpen(false);
         setSelectedMovie(null);
         setDetailsError("");
+        setIsDetailsLoading(false);
     };
 
     const isFavorite = (imdbID) => {
