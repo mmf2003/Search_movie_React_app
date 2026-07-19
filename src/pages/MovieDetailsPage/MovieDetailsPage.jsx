@@ -17,6 +17,7 @@ function MovieDetailsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState("");
     const [posterError, setPosterError] = useState(false);
+    const [isLinkCopied, setIsLinkCopied] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
@@ -121,6 +122,20 @@ function MovieDetailsPage() {
         hasValue(movie.Language);
 
     const hasRecognition = hasValue(movie.Awards) || hasValue(movie.BoxOffice);
+
+    const handleCopyLink = async () => {
+        try {
+            await navigator.clipboard.writeText(window.location.href);
+
+            setIsLinkCopied(true);
+
+            window.setTimeout(() => {
+                setIsLinkCopied(false);
+            }, 2000);
+        } catch {
+            setError("Failed to copy the link");
+        }
+    };
 
     return (
         <main className="movie-page">
@@ -238,6 +253,16 @@ function MovieDetailsPage() {
                                 >
                                     View on IMDb ↗
                                 </a>
+
+                                <button
+                                    className="movie-page__action movie-page__copy"
+                                    type="button"
+                                    onClick={handleCopyLink}
+                                >
+                                    {isLinkCopied
+                                        ? "Link copied ✓"
+                                        : "Copy link"}
+                                </button>
                             </div>
                         </div>
                     </div>
