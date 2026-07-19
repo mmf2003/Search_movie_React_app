@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { AnimatePresence } from "motion/react";
 
 import SearchBar from "../../components/SearchBar/SearchBar";
@@ -18,12 +19,23 @@ import { getMovieDetails, searchMovies } from "../../services/api";
 import "./HomePage.css";
 
 function HomePage() {
-    const [query, setQuery] = useState("");
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [query, setQuery] = useState(searchParams.get("query") ?? "");
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
-    const [typeFilter, setTypeFilter] = useState("");
+    const [currentPage, setCurrentPage] = useState(() => {
+        const pageFromUrl = Number(searchParams.get("page"));
+
+        if (Number.isInteger(pageFromUrl) && pageFromUrl > 0) {
+            return pageFromUrl;
+        }
+
+        return 1;
+    });
+    const [typeFilter, setTypeFilter] = useState(
+        searchParams.get("type") ?? "",
+    );
     const [totalResults, setTotalResults] = useState(0);
     const [selectedMovie, setSelectedMovie] = useState(null);
     const [isDetailsLoading, setIsDetailsLoading] = useState(false);
@@ -134,6 +146,28 @@ function HomePage() {
         setTypeFilter("");
         resetSearchResults();
     };
+
+    useEffect(() => {
+        const nextParams = new URLSearchParams();
+
+        const normalizedQuery = query.trim();
+
+        if (normalizedQuery) {
+            nextParams.set("query", normalizedQuery);
+        }
+
+        if (currentPage > 1) {
+            nextParams.set("page", String(currentPage));
+        }
+
+        if (typeFilter) {
+            nextParams.set("type", typeFilter);
+        }
+
+        setSearchParams(nextParams, {
+            replace: true,
+        });
+    }, [query, currentPage, typeFilter, setSearchParams]);
 
     useEffect(() => {
         const normalizedQuery = debouncedQuery.trim();
