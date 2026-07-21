@@ -34,7 +34,7 @@ function FavoriteCard({ movie, onMovieSelect, onToggleFavorite }) {
                 className="favorite-card__remove"
                 type="button"
                 onClick={handleFavoriteRemove}
-                aria-label={`Удалить ${movie.Title} из избранного`}
+                aria-label={`Remove ${movie.Title} from favorites`}
             >
                 ♥
             </button>
@@ -44,13 +44,11 @@ function FavoriteCard({ movie, onMovieSelect, onToggleFavorite }) {
                     <img
                         className="favorite-card__poster"
                         src={movie.Poster}
-                        alt={`Постер фильма ${movie.Title}`}
+                        alt={`Movie poster ${movie.Title}`}
                         onError={() => setPosterError(true)}
                     />
                 ) : (
-                    <div className="favorite-card__placeholder">
-                        Нет постера
-                    </div>
+                    <div className="favorite-card__placeholder">No poster</div>
                 )}
             </div>
 

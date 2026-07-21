@@ -58,8 +58,8 @@ function MovieCard({ movie, index, isFavorite, onSelect, onToggleFavorite }) {
                 onClick={handleFavoriteClick}
                 aria-label={
                     isFavorite
-                        ? `Удалить ${movie.Title} из избранного`
-                        : `Добавить ${movie.Title} в избранное`
+                        ? `Remove ${movie.Title} from favorite`
+                        : `Add ${movie.Title} to favorite`
                 }
                 aria-pressed={isFavorite}
             >
@@ -70,21 +70,19 @@ function MovieCard({ movie, index, isFavorite, onSelect, onToggleFavorite }) {
                 <img
                     className="movie-card__poster"
                     src={movie.Poster}
-                    alt={`Постер фильма ${movie.Title}`}
+                    alt={`Movie poster ${movie.Title}`}
                     onError={() => setPosterError(true)}
                 />
             ) : (
-                <div className="movie-card__placeholder">
-                    Постер отсутствует
-                </div>
+                <div className="movie-card__placeholder">No poster</div>
             )}
 
             <div className="movie-card__content">
                 <h2 className="movie-card__title">{movie.Title}</h2>
 
-                <p className="movie-card__info">Год: {movie.Year}</p>
+                <p className="movie-card__info">Year: {movie.Year}</p>
 
-                <p className="movie-card__info">Тип: {movie.Type}</p>
+                <p className="movie-card__info">Type: {movie.Type}</p>
             </div>
         </motion.article>
     );

@@ -54,7 +54,7 @@ function MovieModal({
                 className="movie-modal__content"
                 role="dialog"
                 aria-modal="true"
-                aria-label="Подробная информация о фильме"
+                aria-label="Detailed information about the movie"
                 initial={{
                     opacity: 0,
                     y: 12,
@@ -80,7 +80,7 @@ function MovieModal({
                     className="movie-modal__close"
                     type="button"
                     onClick={onClose}
-                    aria-label="Закрыть модальное окно"
+                    aria-label="Close the modal window"
                 >
                     ✕
                 </button>
@@ -151,7 +151,7 @@ function MovieModal({
                                     />
                                 ) : (
                                     <div className="movie-modal__placeholder">
-                                        Постер отсутствует
+                                        No poster
                                     </div>
                                 )}
                             </div>
@@ -173,8 +173,8 @@ function MovieModal({
                                         aria-pressed={isFavorite}
                                     >
                                         {isFavorite
-                                            ? "♥ В избранном"
-                                            : "♡ В избранное"}
+                                            ? "♥ In Favorites"
+                                            : "♡ Add to Favorites"}
                                     </button>
 
                                     <Link
@@ -228,20 +228,22 @@ function MovieModal({
 
                                 <div className="movie-modal__facts">
                                     <p>
-                                        <strong>Режиссёр:</strong>{" "}
+                                        <strong>Director:</strong>{" "}
                                         {movie.Director}
                                     </p>
 
                                     <p>
-                                        <strong>Актёры:</strong> {movie.Actors}
+                                        <strong>Actors:</strong> {movie.Actors}
                                     </p>
 
                                     <p>
-                                        <strong>Страна:</strong> {movie.Country}
+                                        <strong>Country:</strong>{" "}
+                                        {movie.Country}
                                     </p>
 
                                     <p>
-                                        <strong>Язык:</strong> {movie.Language}
+                                        <strong>Language:</strong>{" "}
+                                        {movie.Language}
                                     </p>
                                 </div>
 
