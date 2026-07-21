@@ -1,16 +1,205 @@
-# React + Vite
+# 🎬 Movie Search App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React application for searching movies using the **OMDb API**.
 
-Currently, two official plugins are available:
+The project demonstrates building a production-style React application with custom hooks, routing, API integration, request cancellation, persistent storage, animations, and automated testing.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+> 🔗 **Live Demo:** https://YOUR-VERCEL-LINK.vercel.app
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Features
 
-## Expanding the ESLint configuration
+- 🔍 Live movie search
+- ⏳ Debounced search requests
+- 🚫 Request cancellation with AbortController
+- 📄 Detailed movie page
+- 🎥 Movie details modal
+- ❤️ Favorites with LocalStorage
+- 🕘 Search history
+- 📑 Pagination
+- 🎭 Filter by movie type
+- 💀 Skeleton loading state
+- ❌ Error handling
+- 🧭 React Router navigation
+- 🔗 URL synchronization
+- 📱 Responsive layout
+- 🧪 Unit testing with Vitest & React Testing Library
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 📸 Screenshots
+
+### Home Page
+
+> Add screenshot here
+
+![Home](./screenshots/home.png)
+
+---
+
+### Movie Details
+
+> Add screenshot here
+
+![Movie Details](./screenshots/details.png)
+![Movie Modal](./screenshots/modal.png)
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+- React
+- React Router
+- JavaScript (ES6+)
+- CSS3
+- Framer Motion
+
+### API
+
+- OMDb API
+
+### Testing
+
+- Vitest
+- React Testing Library
+- JSDOM
+
+---
+
+## 📂 Project Structure
+
+```text
+src/
+│
+├── assets/
+├── components/
+│   ├── FavoriteCard/
+│   ├── Favorites/
+│   ├── MovieCard/
+│   ├── MovieList/
+│   ├── MovieModal/
+│   ├── Pagination/
+│   ├── SearchBar/
+│   ├── SearchHistory/
+│   ├── SkeletonCard/
+│   ├── SkeletonList/
+│   └── TypeFilter/
+│
+├── hooks/
+│   ├── useDebounce.js
+│   └── useLocalStorage.js
+│
+├── pages/
+│   ├── HomePage/
+│   ├── MovieDetailsPage/
+│   └── NotFoundPage/
+│
+└── services/
+    └── api.js
+```
+
+---
+
+## 🚀 Getting Started
+
+Clone the repository
+
+```bash
+git clone https://github.com/mmf2003/search-movie-react-app.git
+```
+
+Go to the project
+
+```bash
+cd search-movie-react-app
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Create a `.env` file
+
+```env
+VITE_OMDB_API_KEY=your_api_key
+```
+
+Start development server
+
+```bash
+npm run dev
+```
+
+---
+
+## 🧪 Running Tests
+
+Run all tests
+
+```bash
+npm run test
+```
+
+Run tests once
+
+```bash
+npm run test:run
+```
+
+Generate coverage report
+
+```bash
+npm run test:coverage
+```
+
+---
+
+## 📊 Test Coverage
+
+The project includes unit tests for:
+
+- Custom Hooks
+- API Services
+- Pagination
+- SearchBar
+- TypeFilter
+- MovieCard
+
+Testing tools:
+
+- Vitest
+- React Testing Library
+
+---
+
+## 🌐 API
+
+The project uses the free OMDb API.
+
+https://www.omdbapi.com/
+
+---
+
+## 🔮 Future Improvements
+
+- Dark / Light theme
+- Sorting movies
+- Infinite scrolling
+- Advanced filters
+- PWA support
+- Internationalization (i18n)
+
+---
+
+## 👨‍💻 Author
+
+Oleksandr
+
+GitHub:
+
+https://github.com/mmf2003/Search_movie_React_app.git
