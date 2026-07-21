@@ -54,14 +54,14 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
     return (
         <nav
             className="pagination"
-            aria-label="Навигация по страницам результатов"
+            aria-label="Navigating Through Results Pages"
         >
             <button
                 className="pagination__button pagination__button--arrow"
                 type="button"
                 onClick={handlePrevious}
                 disabled={currentPage === 1}
-                aria-label="Предыдущая страница"
+                aria-label="Previous Page"
             >
                 <svg
                     className="pagination__icon"
@@ -117,7 +117,7 @@ function Pagination({ currentPage, totalPages, onPageChange }) {
                 type="button"
                 onClick={handleNext}
                 disabled={currentPage === totalPages}
-                aria-label="Следующая страница"
+                aria-label="Next Page"
             >
                 <svg
                     className="pagination__icon"

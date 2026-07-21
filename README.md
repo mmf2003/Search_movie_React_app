@@ -4,7 +4,7 @@ A modern React application for searching movies using the **OMDb API**.
 
 The project demonstrates building a production-style React application with custom hooks, routing, API integration, request cancellation, persistent storage, animations, and automated testing.
 
-> 🔗 **Live Demo:** https://YOUR-VERCEL-LINK.vercel.app
+> 🔗 **Live Demo:** https://search-movie-react-app.vercel.app
 
 ---
 

@@ -288,7 +288,7 @@ function HomePage() {
                 />
 
                 {query.trim().length > 0 && query.trim().length < 3 && (
-                    <p className="hero__message">Введите минимум 3 символа</p>
+                    <p className="hero__message">Enter at least 3 characters</p>
                 )}
             </section>
 
@@ -316,7 +316,7 @@ function HomePage() {
                     !error &&
                     query.trim().length >= 3 &&
                     movies.length === 0 && (
-                        <p className="results__message">Фильмы не найдены</p>
+                        <p className="results__message">No movies found</p>
                     )}
 
                 {!isLoading &&

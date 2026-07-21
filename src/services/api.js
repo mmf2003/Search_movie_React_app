@@ -30,7 +30,7 @@ export async function searchMovies(query, page = 1, type = "", signal) {
     });
 
     if (!response.ok) {
-        throw new Error("Не удалось подключиться к серверу");
+        throw new Error("Unable to connect to the server");
     }
 
     const data = await response.json();
@@ -43,7 +43,7 @@ export async function searchMovies(query, page = 1, type = "", signal) {
             };
         }
 
-        throw new Error(data.Error || "Произошла ошибка при поиске");
+        throw new Error(data.Error || "An error occurred during the search");
     }
 
     return {
@@ -61,7 +61,9 @@ export async function getMovieDetails(imdbID, signal) {
     );
 
     if (!response.ok) {
-        throw new Error("Не удалось получить информацию о фильме");
+        throw new Error(
+            "We were unable to find any information about the movie",
+        );
     }
 
     const data = await response.json();

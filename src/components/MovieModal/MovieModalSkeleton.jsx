@@ -4,7 +4,7 @@ function MovieModalSkeleton() {
     return (
         <div
             className="movie-modal__body movie-modal-skeleton"
-            aria-label="Загрузка информации о фильме"
+            aria-label="Loading movie information"
             aria-busy="true"
         >
             <div className="movie-modal-skeleton__poster" />

@@ -6,13 +6,13 @@ function SkeletonList({ count = 8 }) {
         <div
             className="skeleton-list"
             role="status"
-            aria-label="Загрузка фильмов"
+            aria-label="Uploading Movies"
         >
             {Array.from({ length: count }, (_, index) => (
                 <SkeletonCard key={index} />
             ))}
 
-            <span className="visually-hidden">Загружаем фильмы...</span>
+            <span className="visually-hidden">Downloading movies...</span>
         </div>
     );
 }

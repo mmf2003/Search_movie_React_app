@@ -25,10 +25,7 @@ function useLocalStorage(key, initialValue) {
             try {
                 localStorage.setItem(key, JSON.stringify(valueToStore));
             } catch (error) {
-                console.error(
-                    "Не удалось сохранить данные в LocalStorage:",
-                    error,
-                );
+                console.error("Failed to save data to LocalStorage:", error);
             }
 
             return valueToStore;

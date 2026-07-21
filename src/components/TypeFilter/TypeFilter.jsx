@@ -12,7 +12,7 @@ function TypeFilter({ value, onChange, disabled = false }) {
         <div
             className="type-filter"
             role="group"
-            aria-label="Фильтр по типу контента"
+            aria-label="Filter by content type"
         >
             {filterOptions.map((option) => {
                 const isActive = value === option.value;
